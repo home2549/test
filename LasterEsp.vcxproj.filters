@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="alglayer">
+      <UniqueIdentifier>{10898b10-356d-4b5e-925c-62fe329263f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="conflayer">
+      <UniqueIdentifier>{386b283e-83c6-484f-bf83-c11cce75c638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{23b77a6f-71cb-403e-9c7f-68c7caaec2fe}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{d104808e-0eec-4ca5-9261-672dac62d9be}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="db">
+      <UniqueIdentifier>{bf1b5820-6dbc-4527-80e4-a53bbab744ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{eed62fc9-beab-422b-9224-136007a0a502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="devlayer">
+      <UniqueIdentifier>{df6817e1-7454-4bb6-85a1-46315d11ea06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="uploadLayer">
+      <UniqueIdentifier>{81a3436f-a898-45ed-8fb1-9f95b373d8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="com">
+      <UniqueIdentifier>{6289d3b5-5adf-432b-b090-aa4b2839270c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="retry">
+      <UniqueIdentifier>{00fc14bb-ab6b-4260-93c8-787a46850b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dog">
+      <UniqueIdentifier>{df46160b-f079-434d-8cbd-c977886e7dc9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_trafficsettings.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_trafficsettings.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="config\trafficsettings.cpp">
+      <Filter>conflayer</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_trafficalg.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_trafficalg.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="alg\trafficalg.cpp">
+      <Filter>alglayer</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_trafficprotocol.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_trafficprotocol.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_devchannel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_devchannel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_trafficupload.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_trafficupload.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="net\trafficupload.cpp">
+      <Filter>uploadLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_datarecord.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_datarecord.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="db\datarecord.cpp">
+      <Filter>db</Filter>
+    </ClCompile>
+    <ClCompile Include="trafficsurvey.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_trafficsurvey.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_trafficsurvey.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="lasterdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="net\devchannel.cpp">
+      <Filter>devlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="lasterdevunit.cpp">
+      <Filter>devlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="vehicleinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="virtualbackground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mathhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_devprotocol.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_devprotocol.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol\devprotocol.cpp">
+      <Filter>devlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol\trafficprotocol.cpp">
+      <Filter>uploadLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="SICKProc.cpp">
+      <Filter>devlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_remotedbg.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_remotedbg.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="remotedbg.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_virtualbackground.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_virtualbackground.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="com\posix_qextserialport.cpp">
+      <Filter>com</Filter>
+    </ClCompile>
+    <ClCompile Include="com\qextserialbase.cpp">
+      <Filter>com</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qextserialbase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qextserialbase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="com\qextserialport.cpp">
+      <Filter>com</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qextserialport.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qextserialport.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="com\win_qextserialport.cpp">
+      <Filter>com</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_win_qextserialport.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_win_qextserialport.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="DBDefines.cpp">
+      <Filter>db</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_vehicletetry.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_vehicletetry.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="datatetry.cpp">
+      <Filter>retry</Filter>
+    </ClCompile>
+    <ClCompile Include="vehicletetry.cpp">
+      <Filter>retry</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_virtualbackgrounddbg.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_virtualbackgrounddbg.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="virtualbackgrounddbg.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="dbgfactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DispatchMsg\thirddispatchmsg.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="dog\watchdog.c">
+      <Filter>dog</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_dbgprotocol.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_dbgprotocol.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\dbgprotocol.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\device.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_device.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_device.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_lasterdevunit.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="config\trafficsettings.h">
+      <Filter>conflayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="alg\trafficalg.h">
+      <Filter>alglayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="net\trafficupload.h">
+      <Filter>uploadLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="db\datarecord.h">
+      <Filter>db</Filter>
+    </CustomBuild>
+    <CustomBuild Include="trafficsurvey.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="net\devchannel.h">
+      <Filter>devlayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="lasterdevunit.h">
+      <Filter>devlayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="protocol\devprotocol.h">
+      <Filter>devlayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="protocol\trafficprotocol.h">
+      <Filter>uploadLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="remotedbg.h">
+      <Filter>debug</Filter>
+    </CustomBuild>
+    <CustomBuild Include="virtualbackground.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="com\qextserialbase.h">
+      <Filter>com</Filter>
+    </CustomBuild>
+    <CustomBuild Include="com\qextserialport.h">
+      <Filter>com</Filter>
+    </CustomBuild>
+    <CustomBuild Include="com\win_qextserialport.h">
+      <Filter>com</Filter>
+    </CustomBuild>
+    <CustomBuild Include="datatetry.h">
+      <Filter>retry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vehicletetry.h">
+      <Filter>retry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="virtualbackgrounddbg.h">
+      <Filter>debug</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Debug\dbgprotocol.h">
+      <Filter>debug</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Debug\device.h">
+      <Filter>debug</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lasterdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vehicleinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mathhelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="head_struct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SICKProc.h">
+      <Filter>devlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="com\posix_qextserialport.h">
+      <Filter>com</Filter>
+    </ClInclude>
+    <ClInclude Include="DBDefines.h">
+      <Filter>db</Filter>
+    </ClInclude>
+    <ClInclude Include="dbgfactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DispatchMsg\thirddispatchmsg.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="del_code.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dog\watchdog.h">
+      <Filter>dog</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\DbgMsgTypeDefine.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.txt" />
+  </ItemGroup>
+</Project>
