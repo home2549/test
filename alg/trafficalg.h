@@ -19,6 +19,11 @@ public:
 
 #define FLY_MIN_Z_VAL	150
 
+    enum{
+        LASTER_V,
+        LASTER_I
+    };
+
 	TrafficAlg(QObject *parent);
 	~TrafficAlg();
 
@@ -80,6 +85,9 @@ protected:
 	qint16 GetMinPos(int32 *pArray,int32 nlen,qint16 nstart = 0);
 	//获取数组中从哪个点开始，始终大于nVal
 	qint16 GetContinueBigThanVal(int32 *pArray,int32 nlen,int32 nVal,qint16 nstart = 0);
+
+protected:
+    bool isInside(VehicleInfo* , const PointStruct & area,qint32 num_id);
 private:
 	QList<VehicleInfo*> m_Vehicle;
 

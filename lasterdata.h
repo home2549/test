@@ -27,6 +27,7 @@ public:
 
 	const QList<qint32> & zdata() const;
 	const QList<qint32> & xdata() const;
+    
 
 	//分情况：
 	//1、背景与测量值都正常，可获得高度、X位移

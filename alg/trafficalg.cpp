@@ -212,6 +212,29 @@ bool TrafficAlg::trySplit(const PointStruct *src,const LasterData & ndata,QList<
 	return false;
 }
 
+bool TrafficAlg::isInside(VehicleInfo* pVeh, const PointStruct & area,qint32 num_id)
+{
+    PointStruct veh_set;
+
+    if(num_id == LASTER_V){    
+        if(pVeh->getFrame_v()){
+            veh_set = pVeh->Vdata.location;
+            return IS_INSIDE(veh_set.u16Leftpt,veh_set.u16Rightpt,area.u16Leftpt,area.u16Rightpt);
+        } else{
+            veh_set = pVeh->Incdata.location;
+            return IS_INSIDE(veh_set.u16xLeft,veh_set.u16xRight,area.u16xLeft,area.u16xRight);
+        }    
+    } else if(num_id == LASTER_I){
+        if(pVeh->getFrame_q()){
+            veh_set = pVeh->Incdata.location;
+            return IS_INSIDE(veh_set.u16Leftpt,veh_set.u16Rightpt,area.u16Leftpt,area.u16Rightpt);
+        } else{
+            veh_set = pVeh->Vdata.location;
+            return IS_INSIDE(veh_set.u16xLeft,veh_set.u16xRight,area.u16xLeft,area.u16xRight);
+        }    
+    }
+    return false;
+}
 void TrafficAlg::process()
 {
 	LasterData LMS_data_1 = m_vCache.dequeue();
@@ -286,6 +309,9 @@ void TrafficAlg::process()
 		t_matched = false;  //匹配标识，成功置1。
 		l_leftX = l_FrameInfo1.Ptdata[l_u16index].u16xLeft;
 		l_rightX = l_FrameInfo1.Ptdata[l_u16index].u16xRight;
+        l_leftPt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
+        l_rightPt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;
+
 		if (!LasterData::Valid(&l_FrameInfo1.Ptdata[l_u16index],TrafficSettings::instance()->getLasterV()))
 		{
 			continue;
@@ -296,7 +322,7 @@ void TrafficAlg::process()
 			i = j;		
 			if( (m_Vehicle[i]->u8Vstate == VehicleInfo::OCCURING_USED || m_Vehicle[i]->u8Istate != VehicleInfo::NO_USED) )
 			{
-				if(IS_INSIDE(l_leftX,l_rightX,m_Vehicle[i]->locateX.u16xLeft,m_Vehicle[i]->locateX.u16xRight))
+				if(isInside(m_Vehicle[i],l_FrameInfo1.Ptdata[l_u16index],LASTER_V))
 				{
 
 					t_matched = true;  //区域匹配成功
@@ -309,19 +335,25 @@ SINGLE_V_LABEL:
 						l_32tmp2 =m_Vehicle[i]->getFrame_v();
 						if(l_32tmp2 == 0)
 						{
-							m_Vehicle[i]->locateX.u16xLeft = l_leftX;
+                            m_Vehicle[i]->Vdata.location = l_FrameInfo1.Ptdata[l_u16index];
+							/*m_Vehicle[i]->locateX.u16xLeft = l_leftX;
 							m_Vehicle[i]->locateX.u16xRight = l_rightX;
 							m_Vehicle[i]->locateX.u16xDis = l_FrameInfo1.Ptdata[l_u16index].u16xDis;
 							
 							m_Vehicle[i]->locateX.u16Leftpt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
-							m_Vehicle[i]->locateX.u16Rightpt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;	
+							m_Vehicle[i]->locateX.u16Rightpt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;	*/
 
-							l_leftPt = m_Vehicle[i]->locateX.u16Leftpt;
-							l_rightPt = m_Vehicle[i]->locateX.u16Rightpt;
+							l_leftPt = m_Vehicle[i]->Vdata.location.u16Leftpt;
+							l_rightPt = m_Vehicle[i]->Vdata.location.u16Rightpt;
 
 							const QList<qint32> & zBuffer = LMS_data_1.zdata();
 							copy(&m_Vehicle[i]->Vdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
 							m_Vehicle[i]->Vdata.zdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
+
+                            const QList<qint32> & rBuffer = LMS_data_1.data();
+							copy(&m_Vehicle[i]->Vdata.rdata[l_32tmp2][1],rBuffer.begin() + l_leftPt,rBuffer.begin() + l_rightPt);
+							m_Vehicle[i]->Vdata.rdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
+
 
 							m_Vehicle[i]->Vdata.zMax[l_32tmp2] = l_FrameInfo1.Ptdata[l_u16index].u16xMaxHt; 
 
@@ -329,26 +361,30 @@ SINGLE_V_LABEL:
 						}
 						else
 						{
-							m_Vehicle[i]->locateX.u16xLeft = min(l_leftX,m_Vehicle[i]->locateX.u16xLeft);
-							m_Vehicle[i]->locateX.u16xRight = max(l_rightX,m_Vehicle[i]->locateX.u16xRight);
+							m_Vehicle[i]->Vdata.location.u16xLeft = min(l_leftX,m_Vehicle[i]->Vdata.location.u16xLeft);
+							m_Vehicle[i]->Vdata.location.u16xRight = max(l_rightX,m_Vehicle[i]->Vdata.location.u16xRight);
 
 							if(Time_Vertical == m_Vehicle[i]->Vdata.tdata[l_32tmp2 - 1])
 							{
 								l_32tmp2--;
 								m_Vehicle[i]->Vdata.u16FrameCnt--;
 								//同一帧中，有两个区域是同一车的,车辆较宽时
-								m_Vehicle[i]->locateX.u16Leftpt = min(m_Vehicle[i]->locateX.u16Leftpt,
+								m_Vehicle[i]->Vdata.location.u16Leftpt = min(m_Vehicle[i]->Vdata.location.u16Leftpt,
 																	  l_FrameInfo1.Ptdata[l_u16index].u16Leftpt);
 
-								m_Vehicle[i]->locateX.u16Rightpt = max(m_Vehicle[i]->locateX.u16Rightpt,
+								m_Vehicle[i]->Vdata.location.u16Rightpt = max(m_Vehicle[i]->Vdata.location.u16Rightpt,
 																	   l_FrameInfo1.Ptdata[l_u16index].u16Rightpt);
 
-								l_leftPt = m_Vehicle[i]->locateX.u16Leftpt;
-								l_rightPt = m_Vehicle[i]->locateX.u16Rightpt;
+								l_leftPt = m_Vehicle[i]->Vdata.location.u16Leftpt;
+								l_rightPt = m_Vehicle[i]->Vdata.location.u16Rightpt;
 								
 								const QList<qint32> & zBuffer = LMS_data_1.zdata();
 								copy(&m_Vehicle[i]->Vdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
 								m_Vehicle[i]->Vdata.zdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
+
+                                const QList<qint32> & rBuffer = LMS_data_1.data();
+							    copy(&m_Vehicle[i]->Vdata.rdata[l_32tmp2][1],rBuffer.begin() + l_leftPt,rBuffer.begin() + l_rightPt);
+							    m_Vehicle[i]->Vdata.rdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
 
 								m_Vehicle[i]->Vdata.xdata[l_32tmp2] += l_FrameInfo1.Ptdata[l_u16index].u16xDis; 
 
@@ -357,15 +393,19 @@ SINGLE_V_LABEL:
 							}
 							else
 							{
-								m_Vehicle[i]->locateX.u16Leftpt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
-								m_Vehicle[i]->locateX.u16Rightpt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;
+								m_Vehicle[i]->Vdata.location.u16Leftpt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
+								m_Vehicle[i]->Vdata.location.u16Rightpt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;
 
-								l_leftPt = m_Vehicle[i]->locateX.u16Leftpt;
-								l_rightPt = m_Vehicle[i]->locateX.u16Rightpt;
+								l_leftPt = m_Vehicle[i]->Vdata.location.u16Leftpt;
+								l_rightPt = m_Vehicle[i]->Vdata.location.u16Rightpt;
 
 								const QList<qint32> & zBuffer = LMS_data_1.zdata();
 								copy(&m_Vehicle[i]->Vdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
 								m_Vehicle[i]->Vdata.zdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
+
+                                const QList<qint32> & rBuffer = LMS_data_1.data();
+							    copy(&m_Vehicle[i]->Vdata.rdata[l_32tmp2][1],rBuffer.begin() + l_leftPt,rBuffer.begin() + l_rightPt);
+							    m_Vehicle[i]->Vdata.rdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
 
 								m_Vehicle[i]->Vdata.xdata[l_32tmp2] = l_FrameInfo1.Ptdata[l_u16index].u16xDis;
 								m_Vehicle[i]->Vdata.zMax[l_32tmp2] = l_FrameInfo1.Ptdata[l_u16index].u16xMaxHt; 
@@ -380,7 +420,7 @@ SINGLE_V_LABEL:
 						if(t_debug >100){
 							t_debug = t_debug;
 						}
-						m_Vehicle[i]->VemptFrame = 0;			
+                        m_Vehicle[i]->Vdata.u16EmptFrame = 0;			
 					}
 					else
 					{
@@ -426,11 +466,11 @@ SINGLE_V_LABEL:
 				t_newVeh->direct = VehicleInfo::DIRECT_V;
 				m_Vehicle.append(t_newVeh);
 			
-				
-
 				t_newVeh->u8Vstate = VehicleInfo::OCCURING_USED;
 
-				l_leftPt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
+                t_newVeh->Vdata.location = l_FrameInfo1.Ptdata[l_u16index];
+
+				/*l_leftPt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
 				l_rightPt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;
 				l_leftX = l_FrameInfo1.Ptdata[l_u16index].u16xLeft;
 				l_rightX = l_FrameInfo1.Ptdata[l_u16index].u16xRight;
@@ -443,19 +483,29 @@ SINGLE_V_LABEL:
 				t_newVeh->locateX.u16xDis = l_FrameInfo1.Ptdata[l_u16index].u16xDis;
 							
 
-				qDebug()<<"[V]new Vehicle detected at point:"<<l_leftPt<<" x:"<<l_leftX;
+				qDebug()<<"[V]new Vehicle detected at point:"<<l_leftPt<<" x:"<<l_leftX;*/
 				l_32tmp2 = t_newVeh->Vdata.u16FrameCnt = 0;
+
+                l_leftPt = l_FrameInfo1.Ptdata[l_u16index].u16Leftpt;
+				l_rightPt = l_FrameInfo1.Ptdata[l_u16index].u16Rightpt;
+                qint32 l_maxHt = l_FrameInfo1.Ptdata[l_u16index].u16xMaxHt;
 
 				const QList<qint32> & zBuffer = LMS_data_1.zdata();
 				copy(&t_newVeh->Vdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
 				t_newVeh->Vdata.zdata[l_32tmp2][0] = l_rightPt - l_leftPt;
+
+                const QList<qint32> & rBuffer = LMS_data_1.data();
+				copy(&m_Vehicle[i]->Vdata.rdata[l_32tmp2][1],rBuffer.begin() + l_leftPt,rBuffer.begin() + l_rightPt);
+				m_Vehicle[i]->Vdata.rdata[l_32tmp2][0]  = l_rightPt - l_leftPt;
+
+
 				t_newVeh->Vdata.xdata[l_32tmp2] = l_FrameInfo1.Ptdata[l_u16index].u16xDis;
 				t_newVeh->Vdata.zMax[l_32tmp2] = l_maxHt;
 
 				t_newVeh->Vdata.tdata[l_32tmp2] = Time_Vertical;
 				t_newVeh->incFrame_v();                       
 
-				t_newVeh->VemptFrame = 0;
+                t_newVeh->Vdata.u16EmptFrame = 0;
 			}
 		} //end if进新车 
 	}   //end for
@@ -481,7 +531,7 @@ SINGLE_V_LABEL:
 			i = j;//g_VehicleSetIndex[j] - 1;		
 			if((m_Vehicle[i]->u8Vstate != VehicleInfo::NO_USED || m_Vehicle[i]->u8Istate == VehicleInfo::OCCURING_USED))
 			{
-				if(IS_INSIDE(l_leftX,l_rightX,m_Vehicle[i]->locateX.u16xLeft,m_Vehicle[i]->locateX.u16xRight))
+				if(isInside(m_Vehicle[i],l_FrameInfo2.Ptdata[l_u16index],LASTER_I))
 				{
 					t_matched = true;  //区域匹配成功
 					m_Vehicle[i]->u8Istate = VehicleInfo::OCCURING_USED;	
@@ -491,15 +541,16 @@ SINGLE_Q_LABEL:
 						l_32tmp2 =m_Vehicle[i]->getFrame_q();
 						if(l_32tmp2 == 0)
 						{
-							m_Vehicle[i]->locateX.u16xLeft = l_leftX;
+                            m_Vehicle[i]->Incdata.location = l_FrameInfo2.Ptdata[l_u16index];
+							/*m_Vehicle[i]->locateX.u16xLeft = l_leftX;
 							m_Vehicle[i]->locateX.u16xRight = l_rightX;
 							m_Vehicle[i]->locateX.u16xDis = l_FrameInfo2.Ptdata[l_u16index].u16xDis;
 							
 							m_Vehicle[i]->locateX.u16Leftpt = l_FrameInfo2.Ptdata[l_u16index].u16Leftpt;
-							m_Vehicle[i]->locateX.u16Rightpt = l_FrameInfo2.Ptdata[l_u16index].u16Rightpt;	
+							m_Vehicle[i]->locateX.u16Rightpt = l_FrameInfo2.Ptdata[l_u16index].u16Rightpt;	*/
 
-							l_leftPt = m_Vehicle[i]->locateX.u16Leftpt;
-							l_rightPt = m_Vehicle[i]->locateX.u16Rightpt;
+							l_leftPt = m_Vehicle[i]->Incdata.location.u16Leftpt;
+							l_rightPt = m_Vehicle[i]->Incdata.location.u16Rightpt;
 
 							const QList<qint32> & zBuffer = LMS_data_2.zdata();
 							copy(&m_Vehicle[i]->Incdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
@@ -511,22 +562,22 @@ SINGLE_Q_LABEL:
 						}
 						else
 						{
-							m_Vehicle[i]->locateX.u16xLeft = min(l_leftX,m_Vehicle[i]->locateX.u16xLeft);
-							m_Vehicle[i]->locateX.u16xRight = max(l_rightX,m_Vehicle[i]->locateX.u16xRight);
+							m_Vehicle[i]->Incdata.location.u16xLeft = min(l_leftX,m_Vehicle[i]->Incdata.location.u16xLeft);
+							m_Vehicle[i]->Incdata.location.u16xRight = max(l_rightX,m_Vehicle[i]->Incdata.location.u16xRight);
 
 							if(Time_Vertical == m_Vehicle[i]->Incdata.tdata[l_32tmp2 - 1])
 							{
 								l_32tmp2--;
 								m_Vehicle[i]->Incdata.u16FrameCnt--;
 								//同一帧中，有两个区域是同一车的,车辆较宽时
-								m_Vehicle[i]->locateX.u16Leftpt = min(m_Vehicle[i]->locateX.u16Leftpt,
+								m_Vehicle[i]->Incdata.location.u16Leftpt = min(m_Vehicle[i]->Incdata.location.u16Leftpt,
 																	  l_FrameInfo2.Ptdata[l_u16index].u16Leftpt);
 
-								m_Vehicle[i]->locateX.u16Rightpt = max(m_Vehicle[i]->locateX.u16Rightpt,
+								m_Vehicle[i]->Incdata.location.u16Rightpt = max(m_Vehicle[i]->Incdata.location.u16Rightpt,
 																	   l_FrameInfo2.Ptdata[l_u16index].u16Rightpt);
 
-								l_leftPt = m_Vehicle[i]->locateX.u16Leftpt;
-								l_rightPt = m_Vehicle[i]->locateX.u16Rightpt;
+								l_leftPt = m_Vehicle[i]->Incdata.location.u16Leftpt;
+								l_rightPt = m_Vehicle[i]->Incdata.location.u16Rightpt;
 								
 								const QList<qint32> & zBuffer = LMS_data_2.zdata();
 								copy(&m_Vehicle[i]->Incdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
@@ -539,11 +590,11 @@ SINGLE_Q_LABEL:
 							}
 							else
 							{
-								m_Vehicle[i]->locateX.u16Leftpt = l_FrameInfo2.Ptdata[l_u16index].u16Leftpt;
-								m_Vehicle[i]->locateX.u16Rightpt = l_FrameInfo2.Ptdata[l_u16index].u16Rightpt;
+								m_Vehicle[i]->Incdata.location.u16Leftpt = l_FrameInfo2.Ptdata[l_u16index].u16Leftpt;
+								m_Vehicle[i]->Incdata.location.u16Rightpt = l_FrameInfo2.Ptdata[l_u16index].u16Rightpt;
 
-								l_leftPt = m_Vehicle[i]->locateX.u16Leftpt;
-								l_rightPt = m_Vehicle[i]->locateX.u16Rightpt;
+								l_leftPt = m_Vehicle[i]->Incdata.location.u16Leftpt;
+								l_rightPt = m_Vehicle[i]->Incdata.location.u16Rightpt;
 
 								const QList<qint32> & zBuffer = LMS_data_2.zdata();
 								copy(&m_Vehicle[i]->Incdata.zdata[l_32tmp2][1],zBuffer.begin() + l_leftPt,zBuffer.begin() + l_rightPt);
@@ -564,7 +615,7 @@ SINGLE_Q_LABEL:
 						if(t_debug >100){
 							t_debug = t_debug;
 						}
-						m_Vehicle[i]->IemptFrame = 0;			
+                        m_Vehicle[i]->Incdata.u16EmptFrame = 0;			
 					}
 					else
 					{
@@ -615,7 +666,8 @@ SINGLE_Q_LABEL:
 
 				t_newVeh->u8Istate = VehicleInfo::OCCURING_USED;
 
-				l_leftPt = l_FrameInfo2.Ptdata[l_u16index].u16Leftpt;
+                t_newVeh->Incdata.location = l_FrameInfo2.Ptdata[l_u16index];
+				/*l_leftPt = l_FrameInfo2.Ptdata[l_u16index].u16Leftpt;
 				l_rightPt = l_FrameInfo2.Ptdata[l_u16index].u16Rightpt;
 				l_leftX = l_FrameInfo2.Ptdata[l_u16index].u16xLeft;
 				l_rightX = l_FrameInfo2.Ptdata[l_u16index].u16xRight;
@@ -625,8 +677,12 @@ SINGLE_Q_LABEL:
 				t_newVeh->locateX.u16xRight = l_rightX;
 				t_newVeh->locateX.u16Leftpt = l_leftPt;
 				t_newVeh->locateX.u16Rightpt = l_rightPt;
-				t_newVeh->locateX.u16xDis = l_FrameInfo2.Ptdata[l_u16index].u16xDis;
+				t_newVeh->locateX.u16xDis = l_FrameInfo2.Ptdata[l_u16index].u16xDis;*/
 							
+
+                l_leftPt = l_FrameInfo2.Ptdata[l_u16index].u16Leftpt;
+				l_rightPt = l_FrameInfo2.Ptdata[l_u16index].u16Rightpt;
+                qint32 l_maxHt = l_FrameInfo2.Ptdata[l_u16index].u16xMaxHt;
 
 				qDebug()<<"[Q]new Vehicle detected at point:"<<l_leftPt<<" x:"<< l_leftX;
 				l_32tmp2 = t_newVeh->Incdata.u16FrameCnt = 0;
@@ -640,7 +696,7 @@ SINGLE_Q_LABEL:
 				t_newVeh->Incdata.tdata[l_32tmp2] = Time_Vertical;
 				t_newVeh->incFrame_q();                       
 
-				t_newVeh->IemptFrame = 0;
+                t_newVeh->Incdata.u16EmptFrame = 0;
 			}
 		} //end if进新车 
 
@@ -654,16 +710,16 @@ SINGLE_Q_LABEL:
 
 		if(ref_VehItem->u8Vstate != VehicleInfo::NO_USED || ref_VehItem->u8Istate != VehicleInfo::NO_USED)
 		{
-			if(ref_VehItem->VemptFrame > NORMAL_MAX_EMPTYFRAME && ref_VehItem->Vdata.u16FrameCnt > 1)
+            if(ref_VehItem->Vdata.u16EmptFrame > NORMAL_MAX_EMPTYFRAME && ref_VehItem->Vdata.u16FrameCnt > 1)
 			{
 				ref_VehItem->u8Vstate = VehicleInfo::PASSED_USED;  //已结束，可收尾的车
 			}
-			if(ref_VehItem->IemptFrame > NORMAL_MAX_EMPTYFRAME && ref_VehItem->Incdata.u16FrameCnt > 1)
+			if(ref_VehItem->Incdata.u16EmptFrame > NORMAL_MAX_EMPTYFRAME && ref_VehItem->Incdata.u16FrameCnt > 1)
 			{
 				ref_VehItem->u8Istate = VehicleInfo::PASSED_USED;  //已结束，可收尾的车
 			}
 
-			if(ref_VehItem->IemptFrame >ERR_MAX_EMPTYFRAME && ref_VehItem->VemptFrame >ERR_MAX_EMPTYFRAME)
+            if(ref_VehItem->Incdata.u16EmptFrame >ERR_MAX_EMPTYFRAME && ref_VehItem->Vdata.u16EmptFrame >ERR_MAX_EMPTYFRAME)
 			{
 				qDebug()<<"Vehicle ignored ,total is "<<m_Vehicle.size()<<" Qframe "<<ref_VehItem->getFrame_q()
 					<<" Vframe "<<ref_VehItem->getFrame_v();
@@ -685,7 +741,7 @@ SINGLE_Q_LABEL:
 
 			}
 
-			if(ref_VehItem->locateX.u16xDis > 2800)
+			/*if(ref_VehItem->locateX.u16xDis > 2800)
 			{
 				qDebug()<<"fix width:"<<ref_VehItem->locateX.u16xDis
 					<<"(left:"<<ref_VehItem->locateX.u16xLeft<<","<<ref_VehItem->locateX.u16xRight<<")";					
@@ -696,10 +752,10 @@ SINGLE_Q_LABEL:
 
 				qDebug()<<"to width:"<<ref_VehItem->locateX.u16xDis
 					<<"(left:"<<ref_VehItem->locateX.u16xLeft<<","<<ref_VehItem->locateX.u16xRight<<")";
-			}
+			}*/
 
-			ref_VehItem->VemptFrame++;
-			ref_VehItem->IemptFrame++;
+			ref_VehItem->Vdata.u16EmptFrame++;
+            ref_VehItem->Incdata.u16EmptFrame++;
 		}
 	}
 
@@ -844,7 +900,7 @@ void TrafficAlg::VehModels2(VehicleInfo *pVeh)
 	//根据车辆中心点位置，计算车所在的车道
 	if(TrafficSettings::instance()->LaneWide())
 	{
-		tmp1 = (pVeh->locateX.u16xLeft+pVeh->locateX.u16xRight)>>1;
+        tmp1 = (pVeh->Vdata.location.u16xLeft+pVeh->Vdata.location.u16xRight)>>1;
 		if(tmp1  < 0){
 
 			if(TrafficSettings::instance()->getLasterV().LmsObstacleleft())
@@ -1425,7 +1481,7 @@ int16 TrafficAlg::GetSkeletonMax_v(VehicleInfo *pVeh,int32 *pOutData)
 	int16 t_roofEndPt = 0;
 
 	//计算车辆经过的哪侧 	
-	int16 t_passMidPt = (pVeh->locateX.u16Leftpt + pVeh->locateX.u16Rightpt)>>1;
+	int16 t_passMidPt = (pVeh->Vdata.location.u16Leftpt + pVeh->Vdata.location.u16Rightpt)>>1;
 	if(t_passMidPt < TrafficSettings::instance()->getLasterV().LmsPtMid())
 	{
 		//在左侧经过
@@ -1602,7 +1658,7 @@ int16 TrafficAlg::GetTopCross_v(VehicleInfo *pVeh,int16 nFrameIndex,int32 *pOutD
 	int16 t_roofEndPt = 0;
 
 	//计算车辆经过的哪侧 	
-	int16 t_passMidPt = (pVeh->locateX.u16Leftpt + pVeh->locateX.u16Rightpt)>>1;
+	int16 t_passMidPt = (pVeh->Vdata.location.u16Leftpt + pVeh->Vdata.location.u16Rightpt)>>1;
 	if(t_passMidPt < TrafficSettings::instance()->getLasterV().LmsPtMid())
 	{
 		//在左侧经过

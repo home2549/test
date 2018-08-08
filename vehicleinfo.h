@@ -22,28 +22,35 @@
 
 class VehicleDataStruct{
 public:
+      quint16  u16EmptFrame; //垂直空白帧数
+      PointStruct location; //车的左右位置
+
 	 quint16 u16FrameCnt; //总帧数
-    //qint32  ydata[FRAME_MAXCNT];
      qint32  xdata[FRAME_MAXCNT];
      qint32  zdata[FRAME_MAXCNT][FRAME_BUFLEN];
+     qint32  rdata[FRAME_MAXCNT][FRAME_BUFLEN];       
      qint32  zMax[FRAME_MAXCNT];
-     qint64 tdata[FRAME_MAXCNT]; //时间
+     qint64  tdata[FRAME_MAXCNT]; //时间
+  
 
 	 VehicleDataStruct()
+         :location(PointStruct())
 	 {
-		u16FrameCnt = 0;
+		u16FrameCnt = u16EmptFrame = 0;
 		//memset(ydata,0,sizeof(qint32)*FRAME_MAXCNT);
 		memset(xdata,0,sizeof(qint32)*FRAME_MAXCNT);
 		memset(zMax,0,sizeof(qint32)*FRAME_MAXCNT);
-		memset(tdata,0,sizeof(qint32)*FRAME_MAXCNT);
-
+		memset(tdata,0,sizeof(qint64)*FRAME_MAXCNT);
+              
 		qint32 nIndex = 0;
 		while(nIndex < FRAME_MAXCNT){
 			memset(zdata[nIndex++],0,sizeof(qint32)*FRAME_BUFLEN);
+            memset(rdata[nIndex++],0,sizeof(qint32)*FRAME_BUFLEN);
 		}
 	 }
-
 };
+
+
 class VehicleInfo
 {
 public:
@@ -67,10 +74,14 @@ public:
 
 	quint16 getFrame_v();
 	void incFrame_v();
+
 	quint16 getFrame_q();
 	void incFrame_q();
+
 	static qint32 Count();
 	static void InitStatic();
+
+
 public:
 
 	bool operator==(const VehicleInfo & other);
@@ -88,10 +99,14 @@ public:
     qreal  ZLen;  //车身的高度
     qreal  xLen;   //车身的宽度
     qint32  speed;
-	qint32  VemptFrame; //垂直空白帧数
-    qint32  IemptFrame;	//倾斜空白帧数
-    PointStruct locateX; //车的左右位置
+	   
+
+    //qint32  VemptFrame; //垂直空白帧数
+    //PointStruct locateX_V; //车的左右位置
     VehicleDataStruct  Vdata;  //垂直
+
+    //qint32  IemptFrame;	//倾斜空白帧数
+    //PointStruct locateX_I; //车的左右位置
     VehicleDataStruct  Incdata;	//倾斜
 
 	//车辆首次进入方向

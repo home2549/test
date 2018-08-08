@@ -11,7 +11,7 @@ VehicleInfo::VehicleInfo()
 	u8Vstate = u8Istate = NO_USED;
     u8Lane = 0;
     yLen=ZLen=xLen = 0;   
-    speed=VemptFrame=IemptFrame = 0;	
+    speed= 0;	
 	devID="";
 	dayNumber = 0;
 	datetime = QDateTime::currentDateTime();
@@ -37,8 +37,6 @@ VehicleInfo  & VehicleInfo::operator=(const VehicleInfo & other)
 	ZLen= other.ZLen;
 	xLen = other.xLen;   
 	speed= other.speed;
-	VemptFrame= other.VemptFrame;
-	IemptFrame = other.IemptFrame;	
 	devID=other.devID;
 	dayNumber = other.dayNumber;
 	datetime = other.datetime;

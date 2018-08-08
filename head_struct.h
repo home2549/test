@@ -1,7 +1,10 @@
 #ifndef __HEAD_STRUCT__H
 #define __HEAD_STRUCT__H
 
+#define  NEW_TSINGOAL
+
 #include <QObject>
+#include <QVector>
 
 typedef qint32 int32;
 typedef quint32 uint32;
@@ -9,6 +12,35 @@ typedef quint16 uint16;
 typedef qint16 int16;
 typedef quint8 uint8;
 
+#ifdef NEW_TSINGOAL
+typedef struct tagPointStruct
+{
+    int32  u16xLeft;  //左侧位置
+    int32  u16xRight; //右侧位置 //wzf
+    uint16  u16xMaxHt; //最大值Z
+
+    uint16   u16Leftpt; //左侧位置点
+    uint16   u16Rightpt; //右侧位置点
+    uint16  u16xDis;
+
+    //QVector<qint32> m_values;
+	tagPointStruct(){
+		u16xLeft = u16xRight = u16xMaxHt = u16Leftpt = u16Rightpt = u16xDis = 0;
+      //  m_values.clear();
+	}
+
+    tagPointStruct & operator=(const tagPointStruct & other){        
+        u16xLeft = other.u16xLeft;
+        u16xRight = other.u16xRight;
+        u16xMaxHt = other.u16xMaxHt;
+        u16Leftpt =other.u16Leftpt;
+        u16Rightpt = other.u16Rightpt;
+        u16xDis = other.u16xDis;
+        return *this;
+    }
+
+}PointStruct;
+#else
 typedef struct tagPointStruct
 {
     int32  u16xLeft;  //左侧位置
@@ -23,6 +55,7 @@ typedef struct tagPointStruct
 		u16xLeft = u16xRight = u16xMaxHt = u16Leftpt = u16Rightpt = u16xDis = 0;
 	}
 }PointStruct;
+#endif
 
 #define POINTSET_MASK	0x0F
 #define POINTSET_CNT	0x10
